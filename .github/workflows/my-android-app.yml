@@ -6,14 +6,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Build Web
         run: |
           npm install
           npm install -g tsx
           npx tsx src/build/build.ts
+
       - name: Build APK
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
@@ -23,6 +33,7 @@ jobs:
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
