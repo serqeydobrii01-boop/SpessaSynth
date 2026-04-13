@@ -12,7 +12,8 @@ jobs:
       - name: Build Web
         run: |
           npm install
-          npm run build
+          npm install -g tsx
+          npx tsx src/build/build.ts
       - name: Build APK
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
