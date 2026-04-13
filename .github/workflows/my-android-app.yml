@@ -24,12 +24,17 @@ jobs:
           npm install -g tsx
           npx tsx src/build/build.ts
 
-      - name: Build APK
+      - name: Setup Capacitor and Fix Duplicates
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init SpessaSynth com.spessa.app --web-dir dist
           npx cap add android
           npx cap copy
+          # Фикс дубликатов Kotlin
+          echo "configurations.all { resolutionStrategy.eachDependency { if (requested.group == 'org.jetbrains.kotlin') { useVersion '1.8.22' } } }" >> android/app/build.gradle
+
+      - name: Build APK
+        run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
